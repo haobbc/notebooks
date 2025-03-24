@@ -9,7 +9,7 @@
 - 在本地端建立一個專屬的 Obsidian 資料夾，用於存放 Markdown 格式的筆記。
 - 設定資料夾結構以便後續管理，例如分隔文獻筆記與個人想法。
 
-### 2. [Git 備份到 GitHub](./Project/git.md)
+### 2. [Git 備份到 GitHub](./Project/git/git.md)
 - 初始化 Git 儲存庫，將 Obsidian 資料夾中的筆記同步至 GitHub。
 - 確保版本控制，方便追蹤筆記修改並實現遠端備份。
 
@@ -23,15 +23,15 @@
   - 優勢：節省 Zotero 本地儲存空間，並避免將大型 PDF 檔案上傳至 GitHub。
 
 ### 5. 使用自動化程式生成 YML 及快速個人筆記
-#### 5-1. [使用 Pyzotero 利用 PDF 找到元數據](./Project/Pyzotero.md)
+#### 5-1. [使用 Pyzotero 利用 PDF 找到元數據](./Project/Paper_summary/Pyzotero.md)
 - 透過 Pyzotero 套件，從 PDF 檔案中提取元數據（例如標題、作者、出版年份等）。
 - 將元數據轉換為 YML 格式，儲存於 Obsidian 資料夾中。
 
-#### 5-2. [使用 LLM 生成快速筆記](./Project/LLM.md)
+#### 5-2. [使用 LLM 生成快速筆記](./Project/Paper_summary/LLM.md)
 - 利用 LLM（大型語言模型），根據 PDF 全文生成簡要筆記。
 - 要求：需提供文章全文作為輸入。
 
-#### 5-3. [使用CitationKey版本](./Project/PDF2MD.md)
+#### 5-3. [使用CitationKey版本](./Project/Paper_summary/PDF2MD.md)
  - 使用Better BibTex pluging 生成的citationKey
  - 克服標題多樣性造成檔名不一致的問題
  - 未來快速整合Pandoc套用引用格式
@@ -59,5 +59,5 @@
 - LLM 生成筆記時，需校對內容以確保準確性。
 
 ---
-*最後更新日期：2025年3月11日*
+*最後更新日期：2025年3月24日*
 
