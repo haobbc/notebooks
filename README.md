@@ -17,5 +17,5 @@
 使用MARP CLI或MARP plugin for VS code
 
 ## Non-Accidental Head trauma
- - [Slide](/Slides/Non-Accidental%20Head%20Injury/Non-Accidental%20Head%20Injury.md)
- - [HTML](/Slides/Non-Accidental%20Head%20Injury/Non-Accidental%20Head%20Injury.html)
+ - [Slide](/Slides/Non-Accidental_Head_Injury/Non-Accidental_Head_Injury.md)
+ - [HTML](/Slides/Non-Accidental_Head_Injury/Non-Accidental_Head_Injury.html)
