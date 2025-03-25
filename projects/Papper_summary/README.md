@@ -9,7 +9,7 @@
 - 在本地端建立一個專屬的 Obsidian 資料夾，用於存放 Markdown 格式的筆記。
 - 設定資料夾結構以便後續管理，例如分隔文獻筆記與個人想法。
 
-### 2. [Git 備份到 GitHub](~/Project/Git/git.md)
+### 2. [Git 備份到 GitHub](../study_notes/Git/git.md)
 - 初始化 Git 儲存庫，將 Obsidian 資料夾中的筆記同步至 GitHub。
 - 確保版本控制，方便追蹤筆記修改並實現遠端備份。
 
