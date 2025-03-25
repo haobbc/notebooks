@@ -6,7 +6,7 @@
 - **[學習筆記](./study_notes/README.md)**  
 - **[工作項目](./projects/README.md)**  
 - **論文筆記**  
-- **[Slides (簡報)](./slides/README.md)**  
+- **[Slides (簡報)](./Slides/README.md)**  
 - **TODO List**  
 
 ---
