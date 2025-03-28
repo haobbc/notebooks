@@ -191,3 +191,145 @@ jupyter lab
   ```
 - 成功輸出版本號，證明使用的是 `data_env` 的 kernel。
 
+
+在使用 `sqlite_web` 遠端存取 SQLite 資料庫時，需要了解 `sqlite_web` 是一個基於 Python 的工具，它提供了一個網頁介面來管理和查詢本地的 SQLite 資料庫檔案。預設情況下，`sqlite_web` 是設計來在本地機器上運行的，並不直接支援遠端存取。然而，透過一些配置和網路設定，你可以實現遠端進入的效果。以下是步驟和說明：
+
+---
+
+### 遠端連線
+
+在遠端存取 **JupyterLab** 的過程中，配置方式與 `sqlite_web` 有相似之處，但 JupyterLab 本身提供了更多的選項和安全性功能，例如密碼保護和 SSL 加密。以下是詳細的步驟，說明如何設定 JupyterLab 以實現遠端連線：
+
+---
+
+### 1. 安裝 JupyterLab
+假設你在遠端主機上尚未安裝 JupyterLab，可以使用以下指令安裝：
+```bash
+pip install jupyterlab
+```
+
+---
+
+### 2. 配置 JupyterLab
+JupyterLab 需要一些基本配置來允許遠端存取。以下是設定步驟：
+
+#### (1) 生成配置文件
+首次運行 JupyterLab 時，生成預設配置文件：
+```bash
+jupyter lab --generate-config
+```
+這會在 `~/.jupyter/jupyter_lab_config.py` 中創建一個配置文件。
+
+#### (2) 修改配置文件
+編輯剛剛生成的配置文件（例如使用 `nano` 或 `vim`）：
+```bash
+nano ~/.jupyter/jupyter_lab_config.py
+```
+找到以下幾行並修改（如果沒有這些行，可以直接新增）：
+```python
+c.ServerApp.ip = '0.0.0.0'  # 監聽所有網路介面，允許外部連線
+c.ServerApp.port = 8888      # 指定端口（預設是 8888，可自訂）
+c.ServerApp.open_browser = False  # 不自動打開本地瀏覽器
+c.ServerApp.allow_remote_access = True  # 允許遠端存取
+```
+
+#### (3) 設定密碼（可選，但強烈建議）
+為了安全性，可以設定一個登入密碼。運行以下指令生成密碼：
+```bash
+jupyter lab password
+```
+系統會提示你輸入並確認密碼，然後將加密後的密碼儲存到配置文件中（通常在 `~/.jupyter/jupyter_server_config.json`）。啟動 JupyterLab 後，訪問時會要求輸入此密碼。
+
+---
+
+### 3. 啟動 JupyterLab
+在遠端主機上啟動 JupyterLab：
+```bash
+jupyter lab
+```
+如果配置文件已正確設定，JupyterLab 會監聽 `0.0.0.0:8888`，並允許外部連線。
+
+你也可以直接在命令列中指定參數（如果不想修改配置文件）：
+```bash
+jupyter lab --ip=0.0.0.0 --port=8888 --no-browser
+```
+
+---
+
+### 4. 檢查防火牆和網路設定
+與 `sqlite_web` 類似，你需要確保遠端主機的防火牆和網路設定允許連線到 JupyterLab 的端口（例如 8888）。
+
+#### 使用 `ufw`（Ubuntu）
+```bash
+sudo ufw allow 8888
+sudo ufw status
+```
+
+#### 使用 `firewalld`（CentOS/RHEL）
+```bash
+sudo firewall-cmd --add-port=8888/tcp --permanent
+sudo firewall-cmd --reload
+```
+
+如果使用雲端服務（例如 AWS、GCP、Azure），需要在安全群組中開放對應端口。
+
+---
+
+### 5. 從本地端遠端存取
+在本地端的瀏覽器中輸入以下網址：
+```
+http://遠端主機的IP位址:8888
+```
+例如，如果遠端主機的公共 IP 是 `192.168.1.100`，則輸入：
+```
+http://192.168.1.100:8888
+```
+如果設定了密碼，頁面會提示你輸入密碼以登入。
+
+---
+
+### 6. 安全性建議
+JupyterLab 直接暴露在公開網路上可能有安全風險。以下是幾個提升安全性的方法：
+
+#### (1) 使用 SSL 加密
+為了防止資料在傳輸過程中被攔截，建議啟用 HTTPS：
+- 生成自簽名憑證：
+  ```bash
+  openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout mykey.key -out mycert.pem
+  ```
+- 修改配置文件，加入憑證路徑：
+  ```python
+  c.ServerApp.certfile = '/path/to/mycert.pem'
+  c.ServerApp.keyfile = '/path/to/mykey.key'
+  ```
+- 啟動後，使用 `https://遠端主機IP:8888` 存取。
+
+#### (2) 使用 SSH 隧道
+與 `sqlite_web` 類似，SSH 隧道是更安全的存取方式：
+1. 在本地端執行：
+   ```bash
+   ssh -L 8888:localhost:8888 user@遠端主機IP
+   ```
+2. 在遠端主機上啟動 JupyterLab，監聽本地：
+   ```bash
+   jupyter lab --ip=127.0.0.1 --port=8888
+   ```
+3. 在本地瀏覽器輸入 `http://localhost:8888`，即可透過隧道存取。
+
+#### (3) 使用 Token 驗證
+JupyterLab 啟動時會生成一個隨機 Token（顯示在終端機輸出中，例如 `http://.../?token=xyz`）。你可以保留此機制，並在存取時手動輸入 Token，而不是設定固定密碼。
+
+---
+
+### 7. 注意事項
+- **後台運行**：如果想讓 JupyterLab 在關閉終端後繼續運行，可以使用 `nohup` 或 `screen`：
+  ```bash
+  nohup jupyter lab --ip=0.0.0.0 --port=8888 --no-browser &
+  ```
+- **資源限制**：JupyterLab 可能會消耗大量記憶體，特別是在執行大型程式時。確保遠端主機有足夠資源。
+- **多用戶支援**：如果你需要多人使用，考慮使用 **JupyterHub**，它是為多用戶環境設計的擴展版本。
+
+---
+
+### 總結
+要遠端連線到 JupyterLab，最簡單的方式是修改配置文件並開放端口，但為了安全性，建議搭配密碼、SSL 或 SSH 隧道使用。根據你的需求（例如單人使用還是多人協作），可以選擇不同的配置方式。如果有更具體的問題（例如作業系統或網路環境），請告訴我，我可以提供更精確的建議！
